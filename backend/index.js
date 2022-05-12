@@ -1,13 +1,12 @@
 require('dotenv').config();
 
 const http = require('http');
-const cloudinary = require('cloudinary').v2;
 const formidable = require('formidable');
 const mongoose = require('mongoose');
-const crypto = require('crypto');
 
 const render = require('./lib/render');
 const static = require('./lib/static');
+const { encrypt, decrypt } = require('./lib/crypto');
 const File = require('./models/fileSchema');
 
 const port = process.env.PORT || 4444;
@@ -25,7 +24,7 @@ const app = http.createServer((req, res) => {
         render(200, 'index', res);
     } else if (req.url === '/file' && req.method === 'POST') {
         const form = formidable();
-        
+
         form.parse(req);
         form.onPart = (part) => {
             console.log(part);
@@ -41,11 +40,8 @@ const app = http.createServer((req, res) => {
                         data: { error: 'File size too large! Maximum file size is 16MB.' }
                     });
                 } else {
-                    const algorithm = 'aes-256-cbc';
-                    const initVector = crypto.randomBytes(16);
-                    const cipher = crypto.createCipheriv(algorithm, process.env.KEY, initVector);
-                    const encryptedFile = Buffer.concat([cipher.update(fileBuffer), cipher.final()]);
-                    console.log(encryptedFile);
+                    const { encryptedFile, initVector } = encrypt(fileBuffer);
+
                     const file = new File({
                         name: part.originalFilename,
                         file: {
@@ -54,6 +50,7 @@ const app = http.createServer((req, res) => {
                             iv: initVector
                         }
                     });
+
                     file.save()
                         .then(result => {
                             console.log(result);
@@ -82,13 +79,9 @@ const app = http.createServer((req, res) => {
         File.find({_id: fileId})
             .then(result => {
                 const [ fileObj ] = result;
-                const fileData = Buffer.from(fileObj.file.data);
-                const initVector = Buffer.from(fileObj.file.iv);
 
-                const algorithm = 'aes-256-cbc';
-                const decipher = crypto.createDecipheriv(algorithm, process.env.KEY, initVector);
-                const decryptedFile = Buffer.concat([decipher.update(fileData), decipher.final()]);
-
+                const decryptedFile = decrypt(fileObj.file.data, fileObj.file.iv);
+                
                 res.writeHead(200, {
                     'Content-type': fileObj.file.contentType,
                     'Content-disposition': 'attachment; filename=' + fileObj.name

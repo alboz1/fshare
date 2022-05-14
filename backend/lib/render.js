@@ -1,9 +1,9 @@
 const fs = require('fs');
 const ejs = require('ejs');
 
-function render(status, route, res, options) {
-    if (options) {
-        ejs.renderFile(`${__dirname}/../../client/views/${route}.ejs`, options.data, (err, str) => {
+function render(status, route, res, data) {
+    if (data) {
+        ejs.renderFile(`${__dirname}/../../client/views/${route}.ejs`, data, (err, str) => {
             if (err) {
                 throw err;
             }

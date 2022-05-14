@@ -1,15 +1,13 @@
 require('dotenv').config();
 
 const http = require('http');
-const formidable = require('formidable');
 const mongoose = require('mongoose');
 
 const render = require('./lib/render');
 const static = require('./lib/static');
 const { decrypt } = require('./lib/crypto');
-const File = require('./models/fileSchema');
-const {saveFile, getFile} = require('./controllers/fileController');
 const parseForm = require('./lib/parseForm');
+const { saveFile, getFile } = require('./controllers/fileController');
 
 const port = process.env.PORT || 4444;
 
@@ -27,11 +25,11 @@ const app = http.createServer((req, res) => {
     if (req.url.includes('assets')) {
         static(req, res);
     } else if (req.url === '/') {
-        render(200, 'index', res);
+        render(200, 'index', res, { file: {title: ''} });
     } else if (req.url === '/upload' && req.method === 'POST') {
         parseForm(req).then(file => {
             const { fileBuffer, part } = file;
-            console.log(fileBuffer, part);
+
             //check if user selected a file to upload
             if (!fileBuffer.length) {
                 render(400, 'upload', res, {
@@ -50,13 +48,12 @@ const app = http.createServer((req, res) => {
     
             const data = saveFile(part, fileBuffer);
             data.then(result => {
-                console.log(result);
                 const isImage = part.mimetype.includes('image');
+
                 render(200, 'upload', res, {
-                    error: '',
-                    data: {
+                    file: {
                         isImage: isImage,
-                        fileURL: `http://${req.headers.host}/download/?id=${result._id}`,
+                        downloadURL: `http://${req.headers.host}/download/?id=${result._id}`,
                         shareURL: `http://${req.headers.host}/file/?id=${result._id}`
                     }
                 });
@@ -70,9 +67,15 @@ const app = http.createServer((req, res) => {
         });
     } else if (req.url.startsWith('/file') && fileId) {
         getFile(res, fileId)
-            .then(file => {
+            .then(result => {
+                const isImage = result.file.contentType.includes('image');
+
                 render(200, 'file', res, {
-                    fileURL: `http://${req.headers.host}/download/?id=${file._id}`
+                    file: {
+                        isImage: isImage,
+                        name: result.name,
+                        url: `http://${req.headers.host}/download/?id=${result._id}`
+                    }
                 });
             });
     } else if (req.url.startsWith('/download') && fileId) {

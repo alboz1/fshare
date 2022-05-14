@@ -22,6 +22,9 @@ function getFile(res, id) {
         File.find({_id: id})
             .then(result => {
                 const [ fileObj ] = result;
+                if (!fileObj) {
+                    throw new Error();
+                }
                 resolve(fileObj);
             })
             .catch(error => {

@@ -3,6 +3,10 @@ const ejs = require('ejs');
 
 function render(status, route, res, data) {
     if (data) {
+        const title = route === 'index' ? '' : route.charAt(0).toUpperCase() + route.slice(1);
+        data.error = !data.error ? '' : data.error;
+        data.title = title;
+        
         ejs.renderFile(`${__dirname}/../../client/views/${route}.ejs`, data, (err, str) => {
             if (err) {
                 throw err;

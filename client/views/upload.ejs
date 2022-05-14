@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
-    <link rel="stylesheet" href="./assets/main.css">
-    <title>Document</title>
-</head>
+<%- include('partials/head.ejs') %>
 <body>
     <h1>File</h1>
     <main>
@@ -16,11 +9,11 @@
                 <p class="error-message"><%= error %></p>
                 <a href="/" title="Homepage">Go back</a>
             <% } else { %>
-                <% if (data.isImage) { %>
-                    <img src="<%= data.fileURL %>" alt="picture" class="img" />
+                <% if (file.isImage) { %>
+                    <img src="<%= file.downloadURL %>" alt="picture" class="img" />
                 <% } %>
                 <h5>Share URL</h5>
-                <p id="share-url"><%= data.shareURL %></p>
+                <p id="share-url"><%= file.shareURL %></p>
                 <div class="qr-code"></div>
             <% } %>
         </div>

@@ -25,7 +25,7 @@ const app = http.createServer((req, res) => {
     if (req.url.includes('assets')) {
         static(req, res);
     } else if (req.url === '/') {
-        render(200, 'index', res, { file: {title: ''} });
+        render(200, 'index', res, {});
     } else if (req.url === '/upload' && req.method === 'POST') {
         parseForm(req).then(file => {
             const { fileBuffer, part } = file;

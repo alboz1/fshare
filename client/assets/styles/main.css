@@ -8,6 +8,7 @@
     --text: #283237;
     --form-background-color: #F1F5FA;
     --blue: #4253F6;
+    --loader-background: rgba(24, 32, 46, 0.6);
 }
 
 body {
@@ -24,6 +25,15 @@ main {
 main .container {
     display: flex;
     justify-content: center;
+}
+
+main .header {
+    padding: 1em;
+    margin: 2em 0;
+}
+main .header > h1 {
+    margin: 0;
+    color: var(--text);
 }
 
 .btn {

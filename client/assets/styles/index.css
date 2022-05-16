@@ -9,13 +9,12 @@ main .input-container {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 5.5em 3.5em;
-    margin: 0 0 1.5em 0;
     cursor: pointer;
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 210px;
 }
+
 main .input-container:hover .folder-icon {
     transform: scale(1.2);
 }
@@ -29,7 +28,8 @@ form {
     display: flex;
     align-items: center;
     flex-direction: column;
-    width: 600px;
+    width: 550px;
+    position: relative;
 }
 
 .input-container .folder-icon {
@@ -47,7 +47,7 @@ form {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    color: var(--primary-color);
+    color: var(--text);
     cursor: pointer;
     font-weight: 700;
     font-size: 1.05em;
@@ -69,14 +69,105 @@ form {
     background: var(--secondary-color);
 }
 
+form .wrapper {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+form .wrapper .file-info-wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    transform: translateY(-100%);
+}
+
 form .file-info {
     display: flex;
     align-items: center;
     width: 100%;
+    margin: 1.7em 0;
 }
 
 form .file-info #file-info-picture {
+    background-size: cover;
+    border-radius: 8px;
+    width: 70px;
+    height: 50px;
+}
+
+form .file-info #file-icon {
+    fill: var(--primary-color);
+}
+
+form .file-info .figure-caption {
+    color: var(--primary-color);
+    margin: 0 0 0 1em;
+}
+
+form .uploading-loader-container {
+    color: var(--secondary-color);
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 90px;
-    height: auto;
+    height: 100%;
+    background: var(--loader-background);
+    border-radius: 8px;
+    text-align: center;
+    display: none;
+    align-items: center;
+    flex-direction: column;
+}
+
+form .uploading-loader-container > p {
+    margin: 3em 0 0 0;
+}
+
+.show {
+    animation: fromTop 0.5s cubic-bezier(.4,1.01,.42,1.02) forwards;
+}
+@keyframes fromTop {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+}
+
+.loader {
+    width: 100%;
+    height: 4.8px;
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+}
+.loader::after {
+    content: '';
+    width: 96px;
+    height: 4.8px;
+    background: var(--secondary-color);
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    animation: hitZak 0.6s ease-in-out infinite alternate;
+}
+  
+@keyframes hitZak {
+    0% {
+        left: 0;
+        transform: translateX(-1%);
+    }
+    100% {
+        left: 100%;
+        transform: translateX(-99%);
+    }
 }

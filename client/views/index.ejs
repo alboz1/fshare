@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('partials/head.ejs', {page: 'index'}) %>
+<%- include('partials/head.ejs') %>
 <body>
     <main>
-        <header>
+        <header class="header">
             <h1>F Share</h1>
         </header>
         <div class="container">
@@ -15,11 +15,21 @@
                     </label>
                     <input type="file" id="file-upload" name="file" value="file-data" required >
                 </div>
-                <figure class="file-info">
-                    <img src="" id="file-info-picture" alt="picture">
-                    <figcaption class="figure-caption">Picture 1</figcaption>
-                </figure>
-                <input type="submit" value="Upload" class="btn" />
+                <div class="wrapper">
+                    <div class="file-info-wrapper">
+                        <figure class="file-info">
+                            <svg id="file-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="40px" height="35px"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M0 64C0 28.65 28.65 0 64 0H224V128C224 145.7 238.3 160 256 160H384V448C384 483.3 355.3 512 320 512H64C28.65 512 0 483.3 0 448V64zM256 128V0L384 128H256z"/></svg>
+                            <span id="file-info-picture"></span>
+                            <figcaption class="figure-caption">Picture 1</figcaption>
+                        </figure>
+                        <input type="submit" value="Upload" class="btn" />
+                    </div>
+                    <span class="loader loading-file"></span>
+                </div>
+                <div class="uploading-loader-container">
+                    <p>Uploading... Please wait!</p>
+                    <span class="loader"></span>
+                </div>
             </form>
         </div>
     </main>

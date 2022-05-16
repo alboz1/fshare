@@ -23,12 +23,12 @@ fileUpload.addEventListener('change', (e) => {
     img.style.display = 'none';
     svg.style.display = 'none';
     wrapper.style.maxHeight = '0';
-    
+
     if (file) {
         reader.readAsDataURL(file);
         wrapper.style.maxHeight = '100%';
             reader.onloadstart = () => {
-                loader.style.display = 'inline-block';
+                loader.style.display = 'block';
             }
             reader.onload = () => {
                 loader.style.display = 'none';

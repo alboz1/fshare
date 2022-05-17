@@ -49,7 +49,7 @@ const app = http.createServer((req, res) => {
             const data = saveFile(part, fileBuffer);
             data.then(result => {
                 const isImage = part.mimetype.includes('image');
-
+                console.log(result);
                 render(200, 'upload', res, {
                     file: {
                         isImage: isImage,

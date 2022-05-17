@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
 
 :root {
-    --background: #F3F3FB;
+    --background: #FCFBFE;
     --secondary-background: #FFFEFF;
     --primary-color: #374957;
     --secondary-color: #DEDFE3;
@@ -21,6 +21,7 @@ body {
 main {
     max-width: 950px;
     margin: 0 auto;
+    padding: 1em;
 }
 
 main .container {
@@ -31,11 +32,12 @@ main .container {
 main .container.space-between {
     justify-content: space-between;
     align-items: center;
+    gap: 100px;
+    font-size: 0.86em;
 }
 
 main .header {
-    padding: 1em;
-    margin: 2em 0;
+    padding: 2em;
 }
 main .header > h1 {
     margin: 0;

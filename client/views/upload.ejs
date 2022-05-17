@@ -4,22 +4,26 @@
 <body>
     <h1>File</h1>
     <main>
-        <div class="container space-between">
-            <% if (error) { %>
+        <% if (error) { %>
+            <div class="error-container">
                 <p class="error-message"><%= error %></p>
-                <a href="/" title="Homepage">Go back</a>
-            <% } else { %>
+                <a href="/" class="btn" title="Homepage">Go back</a>
+            </div>
+        <% } else { %>
+            <div class="container space-between">
                 <section class="file-section">
                     <figure>
                         <% if (file.isImage) { %>
                             <img src="<%= file.downloadURL %>" alt="picture" class="img" />
+                        <% } else { %>
+                            <svg class="file-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="100px" height="100px"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M0 64C0 28.65 28.65 0 64 0H224V128C224 145.7 238.3 160 256 160H384V448C384 483.3 355.3 512 320 512H64C28.65 512 0 483.3 0 448V64zM256 128V0L384 128H256z"/></svg>
                         <% } %>
                         <figcaption><%= file.name %></figcaption>
                     </figure>
                 </section>
                 <section class="share-section">
                     <div class="url">
-                        <h5>Share URL</h5>
+                        <h5 class="small">Share URL</h5>
                         <div class="share-url-wrapper">
                             <p id="share-url"><%= file.shareURL %></p>
                             <button class="copy-btn">
@@ -27,13 +31,14 @@
                             </button>
                         </div>
                     </div>
+                    <span class="horizontal-line">OR</span>
                     <div class="qr-code-share">
                         <p>Scan QR code to download</p>
                         <div class="qr-code"></div>
                     </div>
                 </section>
-            <% } %>
-        </div>
+            </div>
+        <% } %>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -41,10 +46,15 @@
         const shareURL = document.querySelector('#share-url');
         const qrContainer = document.querySelector('.qr-code');
 
-        shareURL && new QRCode(qrContainer, shareURL.textContent);
+        shareURL && new QRCode(qrContainer, {
+            text: shareURL.textContent,
+            width: 200,
+            height: 200,
+            colorDark: '#283237'
+        });
 
         const copyBtn = document.querySelector('.copy-btn');
-        copyBtn.addEventListener('click', e => {
+        copyBtn && copyBtn.addEventListener('click', e => {
             const copyText = document.querySelector('#share-url');
             navigator.clipboard.writeText(copyText.textContent);
         });

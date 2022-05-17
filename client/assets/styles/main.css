@@ -9,6 +9,7 @@
     --form-background-color: #F1F5FA;
     --blue: #4253F6;
     --loader-background: rgba(24, 32, 46, 0.6);
+    --btn-hover: #303db3;
 }
 
 body {
@@ -18,13 +19,18 @@ body {
 }
 
 main {
-    max-width: 850px;
+    max-width: 950px;
     margin: 0 auto;
 }
 
 main .container {
     display: flex;
     justify-content: center;
+}
+
+main .container.space-between {
+    justify-content: space-between;
+    align-items: center;
 }
 
 main .header {
@@ -44,4 +50,9 @@ main .header > h1 {
     padding: 0.8em 1.5em;
     cursor: pointer;
     font-size: 0.9em;
+    transition: background 0.1s ease-in-out;
+}
+
+.btn:hover {
+    background: var(--btn-hover);
 }

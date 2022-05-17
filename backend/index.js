@@ -53,6 +53,7 @@ const app = http.createServer((req, res) => {
                 render(200, 'upload', res, {
                     file: {
                         isImage: isImage,
+                        name: result.name,
                         downloadURL: `http://${req.headers.host}/download/?id=${result._id}`,
                         shareURL: `http://${req.headers.host}/file/?id=${result._id}`
                     }

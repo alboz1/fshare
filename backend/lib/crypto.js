@@ -2,21 +2,27 @@ const crypto = require('crypto');
 
 const algorithm = 'aes-256-cbc';
 
-function encrypt(file) {
+function encrypt(buffer) {
     const initVector = crypto.randomBytes(16);
     const cipher = crypto.createCipheriv(algorithm, process.env.KEY, initVector);
-    const encryptedFile = Buffer.concat([cipher.update(file), cipher.final()]);
+    const encryptedBuffer = Buffer.concat([cipher.update(buffer), cipher.final()]);
 
-    return { encryptedFile, initVector };
+    if (typeof buffer === 'string') {
+        const encryptedHex = `${initVector.toString('hex')}:${encryptedBuffer.toString('hex')}`;
+        return encryptedHex;
+    } else {
+        return { encryptedBuffer, initVector };
+    }
 }
 
-function decrypt(file, iv) {
-    const fileData = Buffer.from(file);
-    const initVector = Buffer.from(iv);
-    const decipher = crypto.createDecipheriv(algorithm, process.env.KEY, initVector);
-    const decryptedFile = Buffer.concat([decipher.update(fileData), decipher.final()]);
+function decrypt(buffer, iv) {
+    const bufferData = typeof buffer === 'string' ? Buffer.from(buffer, 'hex') : Buffer.from(buffer);
+    const initVector = typeof buffer === 'string' ? Buffer.from(iv, 'hex') : Buffer.from(iv);
 
-    return decryptedFile;
+    const decipher = crypto.createDecipheriv(algorithm, process.env.KEY, initVector);
+    const decryptedBuffer = Buffer.concat([decipher.update(bufferData), decipher.final()]);
+
+    return typeof buffer === 'string' ? decryptedBuffer.toString() : decryptedBuffer;
 }
 
 module.exports = {

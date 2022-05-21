@@ -2,10 +2,10 @@ const form = document.querySelector('#upload-form');
 const submitBtn = document.querySelector('input[type="submit"]');
 const uploadLoader = form.querySelector('.uploading-loader-container');
 
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', function(e) {
     console.log(e);
-    submitBtn.setAttribute('disabled', 'true');
-    uploadLoader.style.display = 'flex';
+    // submitBtn.setAttribute('disabled', 'true');
+    // uploadLoader.style.display = 'flex';
 });
 
 const fileUpload = document.querySelector('input[type="file"]');

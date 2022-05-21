@@ -69,12 +69,17 @@ form {
     background: var(--secondary-color);
 }
 
+form .token {
+    display: none;
+}
+
 form .wrapper {
     width: 100%;
     max-height: 0;
     overflow: hidden;
     position: relative;
 }
+
 form .wrapper .loading-file {
     color: var(--primary-color);
     font-size: 1.1em;

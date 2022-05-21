@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 
 const fileSchema = new mongoose.Schema({
+    token: {
+        type: String,
+        unique: true
+    },
     name: String,
-    securityKey: String,
     file: {
         contentType: String,
         data: Buffer,
@@ -18,5 +21,5 @@ const fileSchema = new mongoose.Schema({
 });
 
 const File = new mongoose.model('File', fileSchema);
-
+File.collection.drop();
 module.exports = File;

@@ -2,14 +2,15 @@ const File = require('../models/fileSchema');
 const { encrypt } = require('../lib/crypto');
 const render = require('../lib/render');
 
-function saveFile(file, fileBuffer) {
-    const { encryptedFile, initVector } = encrypt(fileBuffer);
+function saveFile(file, fileBuffer, token) {
+    const { encryptedBuffer, initVector } = encrypt(fileBuffer);
 
     const newFile = new File({
+        token: token,
         name: file.originalFilename,
         file: {
             contentType: file.mimetype,
-            data: encryptedFile,
+            data: encryptedBuffer,
             iv: initVector
         }
     });

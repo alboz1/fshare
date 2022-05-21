@@ -1,37 +1,24 @@
 const formidable = require('formidable');
+const render = require('./render');
 
-function parseForm(req) {
+function parseForm(req, res) {
+    const body = {};
     const form = formidable();
-    form.parse(req);
 
-    const file = new Promise((resolve, reject) => {
-        form.on('data', ({name, key, value, buffer}) => {
-            if (name === 'field') {
-                resolve(value);
+    return new Promise((resolve, reject) => {
+        form.parse(req, (error, fields, files) => {
+            if (error) {
+                render(500, 'upload', res, {
+                    error: 'Oops, something went wrong'
+                });
+                return;
             }
-            if (name === 'file') {
-                console.log(value);
-                resolve(value);
-            }
+    
+            body.token = fields.token;
+            body.file = files.file;
+            resolve(body);
         });
-        // form.onPart = part => {
-        //     const chunks = [];
-        //     const fieldToken = [];
-        //     part.on('data', buffer => {
-        //         if (!part.originalFilename && !part.mimetype) {
-        //             fieldToken.push(buffer);
-        //         } else {
-        //             chunks.push(buffer);
-        //         }
-        //     });
-        //     part.on('end', () => {
-        //         // console.log(fieldToken);
-        //         resolve({fileBuffer: Buffer.concat(chunks), part, fieldToken: Buffer.concat(fieldToken)});
-        //     });
-        // }
     });
-
-    return file;
 }
 
 module.exports = parseForm;

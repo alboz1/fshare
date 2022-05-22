@@ -6,7 +6,8 @@ function static(req, res) {
     const extName = String(path.extname(filePath)).toLowerCase();
     const mimeTypes = {
         '.js': 'text/javascript',
-        '.css': 'text/css'
+        '.css': 'text/css',
+        '.svg': 'image/svg+xml'
     };
     const contentType = mimeTypes[extName];
 

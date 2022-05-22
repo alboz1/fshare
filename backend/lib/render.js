@@ -1,7 +1,7 @@
 const fs = require('fs');
 const ejs = require('ejs');
 
-function render(status, route, res, data, id) {
+function render(status, route, res, data) {
     if (data) {
         const title = route === 'index' ? '' : route.charAt(0).toUpperCase() + route.slice(1);
         data.page = route;
@@ -12,9 +12,7 @@ function render(status, route, res, data, id) {
             if (err) {
                 throw err;
             }
-            if (status === 303) {
-                res.setHeader('Location', '/upload/?id=' + id);
-            }
+
             res.writeHead(status, {
                 'Content-Type': 'text/html',
                 'Cache-Control': 'no-store',

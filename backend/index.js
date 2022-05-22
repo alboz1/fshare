@@ -22,20 +22,19 @@ const app = http.createServer(async (req, res) => {
     const url = new URL('http://' + req.headers.host + req.url);
     const params = url.searchParams;
     const fileId = params.get('id');
-
+    
     //get static files
-    if (req.url.includes('assets')) {
+    if (req.url.match(/\/assets\/(.*)/)) {
         static(req, res);
     } else if (req.url === '/') {
         const encryptedHex = getToken();
         render(200, 'index', res, { token: encryptedHex });
-    } else if (req.url.startsWith('/upload') && fileId && req.method === 'GET') {
+    } else if (req.url.match(/\/upload\/\?id=.*/) && fileId && req.method === 'GET') {
         getFile(res, fileId)
             .then(result => {
-                const isImage = result.file.contentType.includes('image');
                 render(200, 'upload', res, {
                     file: {
-                        isImage: isImage,
+                        isImage: result.file.contentType.includes('image'),
                         name: result.name,
                         downloadURL: `http://${req.headers.host}/download/?id=${result._id}`,
                         shareURL: `http://${req.headers.host}/file/?id=${result._id}`
@@ -56,17 +55,14 @@ const app = http.createServer(async (req, res) => {
         File.findOne({ token: token })
             .then(result => {
                 if (result) {
-                    const isImage = result.file.contentType.includes('image');
-                    render(303, 'upload', res, {
-                        file: {
-                            isImage: isImage,
-                            name: result.name,
-                            downloadURL: `http://${req.headers.host}/download/?id=${result._id}`,
-                            shareURL: `http://${req.headers.host}/file/?id=${result._id}`
-                        }
-                    }, result._id);
+                    res.writeHead(303, {
+                        'Location': '/upload/?id=' + result._id,
+                        'Content-Type': 'text/html',
+                        'Cache-Control': 'no-store'
+                    });
+                    res.end();
                 } else {
-                    readAndSaveFile(body.file, token, req, res);
+                    readAndSaveFile(body.file, token, res);
                 }
             })
             .catch(error => {
@@ -75,20 +71,18 @@ const app = http.createServer(async (req, res) => {
                     error: 'Oops! Something went wrong!'
                 });
             });
-    } else if (req.url.startsWith('/file') && fileId) {
+    } else if (req.url.match(/\/file\/\?id=.*/) && fileId) {
         getFile(res, fileId)
             .then(result => {
-                const isImage = result.file.contentType.includes('image');
-
                 render(200, 'file', res, {
                     file: {
-                        isImage: isImage,
+                        isImage: result.file.contentType.includes('image'),
                         name: result.name,
                         url: `http://${req.headers.host}/download/?id=${result._id}`
                     }
                 });
             });
-    } else if (req.url.startsWith('/download') && fileId) {
+    } else if (req.url.match(/\/download\/\?id=.*/) && fileId) {
         getFile(res, fileId)
             .then(result => {
                 const decryptedBuffer = decrypt(result.file.data, result.file.iv);

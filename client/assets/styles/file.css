@@ -1,0 +1,11 @@
+@import './main.css';
+
+.container {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 1em 2em;
+}
+
+.container img {
+    width: 100%;
+    height: auto;
+}

@@ -30,13 +30,12 @@ function getFile(res, id) {
                 resolve(fileObj);
             })
             .catch(error => {
-                console.log(error);
                 render(404, '404', res);
             });
     });
 }
 
-function readAndSaveFile(file, token, req, res) {
+function readAndSaveFile(file, token, res) {
     console.log('Started file reading');
     let fileBuffer = [];
     const fileStream = fs.createReadStream(file.filepath);
@@ -66,15 +65,12 @@ function readAndSaveFile(file, token, req, res) {
         const data = saveFile(file, fileBuffer, token);
         data.then(result => {
             console.log('End file reading');
-            const isImage = result.file.contentType.includes('image');
-            render(303, 'upload', res, {
-                file: {
-                    isImage: isImage,
-                    name: result.name,
-                    downloadURL: `http://${req.headers.host}/download/?id=${result._id}`,
-                    shareURL: `http://${req.headers.host}/file/?id=${result._id}`
-                }
-            }, result._id);
+            res.writeHead(303, {
+                'Location': '/upload/?id=' + result._id,
+                'Content-Type': 'text/html',
+                'Cache-Control': 'no-store'
+            });
+            res.end();
         })
         .catch(error => {
             console.log(error);

@@ -21,5 +21,5 @@ const fileSchema = new mongoose.Schema({
 });
 
 const File = new mongoose.model('File', fileSchema);
-File.collection.drop();
+
 module.exports = File;

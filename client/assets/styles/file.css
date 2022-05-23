@@ -1,11 +1,50 @@
 @import './main.css';
 
 .container {
-    background: rgba(0, 0, 0, 0.6);
+    max-width: 500px;
+    margin: 2em auto;
     padding: 1em 2em;
+    background: var(--secondary-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--secondary-color);
 }
 
 .container img {
     width: 100%;
     height: auto;
+}
+
+.file-section {
+    display: flex;
+    align-items: center;
+    min-height: 300px;
+    margin: 2em 0;
+    text-align: center;
+}
+
+.download-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--secondary-color);
+}
+
+.download-header .file-name {
+    color: var(--primary-color);
+}
+
+.download-header .download-btn {
+    text-decoration: none;
+    place-self: end;
+    padding: 0.8em;
+}
+
+.download-btn:hover svg {
+    fill: var(--text);
+}
+
+.download-btn svg {
+    fill: var(--primary-color);
+    transition: fill 0.2s ease-in;
 }

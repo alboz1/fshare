@@ -1,11 +1,18 @@
 const form = document.querySelector('#upload-form');
-const submitBtn = document.querySelector('input[type="submit"]');
-const uploadLoader = form.querySelector('.uploading-loader-container');
+const submitBtn = document.querySelector('button[type="submit"]');
+const submitBtnText = submitBtn.querySelector('.text');
+const btnLoader = submitBtn.querySelector('button[type="submit"] .loader');
 
-form.addEventListener('submit', function(e) {
-    console.log(e);
-    // submitBtn.setAttribute('disabled', 'true');
-    // uploadLoader.style.display = 'flex';
+window.addEventListener("pageshow", e => {
+    if (e.persisted) {
+        window.location.reload();
+    }
+}, false);
+
+form.addEventListener('submit', e => {
+    btnLoader.style.display = 'inline-block';
+    submitBtnText.textContent = 'Uploading...';
+    submitBtn.setAttribute('disabled', 'true');
 });
 
 const fileUpload = document.querySelector('input[type="file"]');
@@ -16,7 +23,7 @@ const wrapper = form.querySelector('.wrapper');
 const svg = document.querySelector('#file-icon');
 const loader = wrapper.querySelector('.loading-file');
 
-fileUpload.addEventListener('change', (e) => {
+fileUpload.addEventListener('change', e => {
     const file = e.target.files[0];
     const reader = new FileReader();
     fileInfo.classList.remove('show');
@@ -27,21 +34,23 @@ fileUpload.addEventListener('change', (e) => {
     if (file) {
         reader.readAsDataURL(file);
         wrapper.style.maxHeight = '100%';
-            reader.onloadstart = () => {
-                loader.style.display = 'block';
+
+        reader.onloadstart = () => {
+            loader.style.display = 'block';
+        }
+
+        reader.onload = () => {
+            loader.style.display = 'none';
+
+            if (file.type.match(/image\/.*/)) {
+                img.style.display = 'inline-block';
+                img.style.backgroundImage = `url(${reader.result})`;
+            } else {
+                svg.style.display = 'inline-block';
             }
-            reader.onload = () => {
-                loader.style.display = 'none';
 
-                if (file.type.match(/image\/*/)) {
-                    img.style.display = 'inline-block';
-                    img.style.backgroundImage = `url(${reader.result})`;
-                } else {
-                    svg.style.display = 'inline-block';
-                }
-
-                figureCaption.textContent = file.name;
-                fileInfo.classList.add('show');
+            figureCaption.textContent = file.name;
+            fileInfo.classList.add('show');
         }
     }
 });

@@ -36,7 +36,6 @@ function getFile(res, id) {
 }
 
 function readAndSaveFile(file, token, res) {
-    console.log('Started file reading');
     let fileBuffer = [];
     const fileStream = fs.createReadStream(file.filepath);
     
@@ -44,8 +43,8 @@ function readAndSaveFile(file, token, res) {
         fileBuffer.push(chunk);
     });
     fileStream.on('end', () => {
-        console.log(Buffer.concat(fileBuffer));
         fileBuffer = Buffer.concat(fileBuffer);
+
         //check if user selected a file to upload
         if (!fileBuffer.length) {
             render(400, 'upload', res, {
@@ -64,17 +63,14 @@ function readAndSaveFile(file, token, res) {
 
         const data = saveFile(file, fileBuffer, token);
         data.then(result => {
-            console.log('End file reading');
             res.writeHead(303, {
                 'Location': '/upload/?id=' + result._id,
-                'Content-Type': 'text/html',
-                'Cache-Control': 'no-store'
+                'Content-Type': 'text/html'
             });
             res.end();
         })
         .catch(error => {
-            console.log(error);
-            render(400, 'upload', res, {
+            render(500, 'upload', res, {
                 error: 'Oops! Something went wrong!'
             });
         });

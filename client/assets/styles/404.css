@@ -1,0 +1,20 @@
+@import './main.css';
+
+.wrapper {
+    text-align: center;
+}
+
+.wrapper svg {
+    display: block;
+    margin: 5em auto;
+}
+
+.wrapper a {
+    text-decoration: none;
+}
+
+@media only screen and (max-width: 500px) {
+    .wrapper svg {
+        width: 300px;
+    }
+}

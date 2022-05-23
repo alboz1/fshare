@@ -1,7 +1,6 @@
 @import './main.css';
 
 main .info {
-    /* max-width: 500px; */
     margin: 2.5em 0;
 }
 
@@ -80,6 +79,7 @@ form .input-container {
 
 .input-container label > span {
     padding: 1em;
+    margin: 1em 0 0 0;
 }
 
 .input-container .line {
@@ -116,6 +116,11 @@ form .wrapper .file-info-wrapper {
     transform: translateY(-100%);
 }
 
+.file-info-wrapper button[type="submit"]:disabled {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+}
+
 form .file-info {
     display: flex;
     align-items: center;
@@ -130,37 +135,15 @@ form .file-info #file-info-picture {
     height: 50px;
 }
 
-form .file-info #file-icon {
-    fill: var(--primary-color);
-}
-
 form .file-info .figure-caption {
     color: var(--primary-color);
     margin: 0 0 0 1em;
 }
 
-form .uploading-loader-container {
-    color: var(--secondary-color);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--loader-background);
-    border-radius: 8px;
-    text-align: center;
-    display: none;
-    align-items: center;
-    flex-direction: column;
-}
-
-form .uploading-loader-container > p {
-    margin: 3em 0 0 0;
-}
-
 .show {
     animation: fromTop 0.5s cubic-bezier(.4,1.01,.42,1.02) forwards;
 }
+
 @keyframes fromTop {
     from {
         transform: translateY(-100%);
@@ -173,37 +156,24 @@ form .uploading-loader-container > p {
 }
 
 .loader {
-    width: 100%;
-    height: 4.8px;
-    display: inline-block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    overflow: hidden;
-}
-.loader::after {
-    content: '';
-    width: 96px;
-    height: 4.8px;
-    background: var(--secondary-color);
-    position: absolute;
-    top: 0;
-    left: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: none;
+    border-top: 3px solid var(--primary-color);
+    border-right: 3px solid transparent;
     box-sizing: border-box;
-    animation: hitZak 0.6s ease-in-out infinite alternate;
+    animation: rotation 1s linear infinite;
 }
   
-@keyframes hitZak {
+@keyframes rotation {
     0% {
-        left: 0;
-        transform: translateX(-1%);
+      transform: rotate(0deg);
     }
     100% {
-        left: 100%;
-        transform: translateX(-99%);
+      transform: rotate(360deg);
     }
-}
+} 
 
 @media only screen and (max-width: 700px) {
     form {

@@ -57,8 +57,7 @@ const app = http.createServer(async (req, res) => {
                 if (result) {
                     res.writeHead(303, {
                         'Location': '/upload/?id=' + result._id,
-                        'Content-Type': 'text/html',
-                        'Cache-Control': 'no-store'
+                        'Content-Type': 'text/html'
                     });
                     res.end();
                 } else {

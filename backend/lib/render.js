@@ -1,7 +1,10 @@
 const ejs = require('ejs');
 
-function render(status, route, res, data={}) {
+function render(status, route, req, res, data={}) {
+    const theme = req.headers.cookie && req.headers.cookie.split('=')[1];
     const title = route === 'index' ? '' : route.charAt(0).toUpperCase() + route.slice(1);
+    
+    data.theme = theme === 'dark' ? 'dark-mode' : '';
     data.page = route;
     data.error = !data.error ? '' : data.error;
     data.title = title;

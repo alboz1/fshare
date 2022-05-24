@@ -19,7 +19,7 @@ function saveFile(file, fileBuffer, token) {
     return newFile.save();
 }
 
-function getFile(res, id) {
+function getFile(req, res, id) {
     return new Promise((resolve, reject) => {
         File.find({_id: id})
             .then(result => {
@@ -30,12 +30,12 @@ function getFile(res, id) {
                 resolve(fileObj);
             })
             .catch(error => {
-                render(404, '404', res);
+                render(404, '404', req, res);
             });
     });
 }
 
-function readAndSaveFile(file, token, res) {
+function readAndSaveFile(file, token, req, res) {
     let fileBuffer = [];
     const fileStream = fs.createReadStream(file.filepath);
     
@@ -47,7 +47,7 @@ function readAndSaveFile(file, token, res) {
 
         //check if user selected a file to upload
         if (!fileBuffer.length) {
-            render(400, 'upload', res, {
+            render(400, 'upload', req, res, {
                 error: 'Please select a file to upload!'
             });
             return;
@@ -55,7 +55,7 @@ function readAndSaveFile(file, token, res) {
 
         //check file size
         if (fileBuffer.length >= 16777216) {
-            render(413, 'upload', res, {
+            render(413, 'upload', req, res, {
                 error: 'File size too large! Maximum file size is 16MB.'
             });
             return;
@@ -70,7 +70,7 @@ function readAndSaveFile(file, token, res) {
             res.end();
         })
         .catch(error => {
-            render(500, 'upload', res, {
+            render(500, 'upload', req, res, {
                 error: 'Oops! Something went wrong!'
             });
         });

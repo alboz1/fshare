@@ -43,7 +43,7 @@ form .input-container {
 }
 
 .input-container:hover {
-    border-color: rgba(0, 0, 0, 0.3);
+    border-color: var(--border-hover);
 }
 
 .input-container:hover .folder-icon {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/head.ejs') %>
-<body>
+<body class="<%= theme %>">
     <main>
         <%- include('partials/header.ejs') %>
         <% if (error) { %>
@@ -98,5 +98,6 @@
             navigator.clipboard.writeText(copyText.textContent);
         });
     </script>
+    <script src="../assets/theme-switch.js"></script>
 </body>
 </html>

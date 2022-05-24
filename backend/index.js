@@ -28,11 +28,11 @@ const app = http.createServer(async (req, res) => {
         static(req, res);
     } else if (req.url === '/') {
         const encryptedHex = getToken();
-        render(200, 'index', res, { token: encryptedHex });
+        render(200, 'index', req, res, { token: encryptedHex });
     } else if (req.url.match(/\/upload\/\?id=.*/) && fileId && req.method === 'GET') {
-        getFile(res, fileId)
+        getFile(req, res, fileId)
             .then(result => {
-                render(200, 'upload', res, {
+                render(200, 'upload', req, res, {
                     file: {
                         isImage: result.file.contentType.includes('image'),
                         name: result.name,
@@ -46,7 +46,7 @@ const app = http.createServer(async (req, res) => {
         const token = checkToken(body.token);
 
         if (!token) {
-            render(400, 'upload', res, {
+            render(400, 'upload', req, res, {
                 error: 'Something went wrong!'
             });
             return;
@@ -61,19 +61,19 @@ const app = http.createServer(async (req, res) => {
                     });
                     res.end();
                 } else {
-                    readAndSaveFile(body.file, token, res);
+                    readAndSaveFile(body.file, token, req, res);
                 }
             })
             .catch(error => {
                 console.log(error);
-                render(500, 'upload', res, {
+                render(500, 'upload', req, res, {
                     error: 'Oops! Something went wrong!'
                 });
             });
     } else if (req.url.match(/\/file\/\?id=.*/) && fileId) {
-        getFile(res, fileId)
+        getFile(req, res, fileId)
             .then(result => {
-                render(200, 'file', res, {
+                render(200, 'file', req, res, {
                     file: {
                         isImage: result.file.contentType.includes('image'),
                         name: result.name,
@@ -82,7 +82,7 @@ const app = http.createServer(async (req, res) => {
                 });
             });
     } else if (req.url.match(/\/download\/\?id=.*/) && fileId) {
-        getFile(res, fileId)
+        getFile(req, res, fileId)
             .then(result => {
                 const decryptedBuffer = decrypt(result.file.data, result.file.iv);
                 
@@ -94,7 +94,7 @@ const app = http.createServer(async (req, res) => {
                 res.end();
             });
     } else {
-        render(404, '404', res);
+        render(404, '404', req, res);
     }
 
 });

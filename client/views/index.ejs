@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/head.ejs') %>
-<body>
+<body class="<%= theme %>">
     <main>
         <%- include('partials/header.ejs') %>
         <section class="info">
@@ -98,6 +98,7 @@
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="./assets/theme-switch.js"></script>
     <script src="./assets/main.js"></script>
 </body>
 </html>

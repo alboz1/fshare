@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/head.ejs') %>
-<body>
+<body class="<%= theme %>">
     <main>
         <%-include('partials/header.ejs') %>
         <div class="wrapper">
@@ -10,5 +10,6 @@
             <a href="/" class="btn" title="Homepage">Go back</a>
         </div>
     </main>
+    <script src="../assets/theme-switch.js"></script>
 </body>
 </html>

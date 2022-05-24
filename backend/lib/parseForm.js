@@ -8,7 +8,7 @@ function parseForm(req, res) {
     return new Promise((resolve, reject) => {
         form.parse(req, (error, fields, files) => {
             if (error) {
-                render(500, 'upload', res, {
+                render(500, 'upload', req, res, {
                     error: 'Oops, something went wrong'
                 });
                 return;

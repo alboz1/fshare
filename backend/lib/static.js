@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const render = require('./render');
 
 function static(req, res) {
     const filePath = `.${req.url}`;
@@ -13,8 +14,14 @@ function static(req, res) {
 
     fs.readFile(`${__dirname}/../../client/${req.url}`, (err, data) => {
         if (err) {
-            res.writeHead(404);
-            res.end(JSON.stringify(err));
+            if (err.code === 'ENOENT') {
+                render(404, '404', req, res);
+            } else {
+                res.writeHead(500, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify(err.code));
+            }
             return;
         }
         res.writeHead(200, {

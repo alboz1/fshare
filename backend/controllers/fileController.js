@@ -1,83 +1,107 @@
-const fs = require('fs');
 const File = require('../models/fileSchema');
-const { encrypt } = require('../lib/crypto');
+const { checkToken } = require('../controllers/tokenController');
+const { decrypt } = require('../lib/crypto');
 const render = require('../lib/render');
+const parseForm = require('../lib/parseForm');
+const readAndSaveFile = require('../lib/readAndSaveFile');
 
-function saveFile(file, fileBuffer, token) {
-    const { encryptedBuffer, initVector } = encrypt(fileBuffer);
+function file_upload_get(req, res, id) {
+    File.findOne({ _id: id })
+        .then(result => {
+            if (!result) {
+                throw new Error('Not found!');
+            }
 
-    const newFile = new File({
-        token: token,
-        name: file.originalFilename,
-        file: {
-            contentType: file.mimetype,
-            data: encryptedBuffer,
-            iv: initVector
-        }
-    });
-
-    return newFile.save();
-}
-
-function getFile(req, res, id) {
-    return new Promise((resolve, reject) => {
-        File.find({_id: id})
-            .then(result => {
-                const [ fileObj ] = result;
-                if (!fileObj) {
-                    throw new Error();
+            render(200, 'upload', req, res, {
+                file: {
+                    isImage: result.file.contentType.includes('image'),
+                    name: result.name,
+                    downloadURL: `http://${req.headers.host}/download/?id=${result._id}`,
+                    shareURL: `http://${req.headers.host}/file/?id=${result._id}`
                 }
-                resolve(fileObj);
-            })
-            .catch(error => {
-                render(404, '404', req, res);
             });
-    });
+        })
+        .catch(error => {
+            render(404, '404', req, res);
+        });
 }
 
-function readAndSaveFile(file, token, req, res) {
-    let fileBuffer = [];
-    const fileStream = fs.createReadStream(file.filepath);
-    
-    fileStream.on('data', chunk => {
-        fileBuffer.push(chunk);
-    });
-    fileStream.on('end', () => {
-        fileBuffer = Buffer.concat(fileBuffer);
+function file_upload_post(req, res) {
+    parseForm(req, res)
+        .then(body => {
+            const token = checkToken(body.token);
 
-        //check if user selected a file to upload
-        if (!fileBuffer.length) {
-            render(400, 'upload', req, res, {
-                error: 'Please select a file to upload!'
-            });
-            return;
-        }
+            if (!token) {
+                render(400, 'upload', req, res, {
+                    error: 'Something went wrong!'
+                });
+                return;
+            }
 
-        //check file size
-        if (fileBuffer.length >= 16777216) {
-            render(413, 'upload', req, res, {
-                error: 'File size too large! Maximum file size is 16MB.'
-            });
-            return;
-        }
+            File.findOne({ token: token })
+                .then(result => {
+                    if (result) {
+                        res.writeHead(303, {
+                            'Location': '/upload/?id=' + result._id,
+                            'Content-Type': 'text/html'
+                        });
+                        res.end();
+                    } else {
+                        readAndSaveFile(body.file, token, req, res);
+                    }
+                })
+                .catch(error => {
+                    render(500, 'upload', req, res, {
+                        error: 'Oops! Something went wrong!'
+                    });
+                });
+        });
+}
 
-        const data = saveFile(file, fileBuffer, token);
-        data.then(result => {
-            res.writeHead(303, {
-                'Location': '/upload/?id=' + result._id,
-                'Content-Type': 'text/html'
+function file_download_get(req, res, id) {
+    File.findOne({ _id: id })
+        .then(result => {
+            if (!result) {
+                throw new Error('Not found');
+            }
+
+            render(200, 'file', req, res, {
+                file: {
+                    isImage: result.file.contentType.includes('image'),
+                    name: result.name,
+                    url: `http://${req.headers.host}/download/?id=${result._id}`
+                }
             });
+        })
+        .catch(error => {
+            render(404, '404', req, res);
+        });
+}
+
+function file_download(req, res, id) {
+    File.findOne({ _id: id })
+        .then(result => {
+            if (!result) {
+                throw new Error('Not found');
+            }
+
+            const decryptedBuffer = decrypt(result.file.data, result.file.iv);
+                
+            res.writeHead(200, {
+                'Content-type': result.file.contentType,
+                'Content-disposition': 'attachment; filename=' + result.name
+            });
+            res.write(decryptedBuffer);
             res.end();
         })
         .catch(error => {
-            render(500, 'upload', req, res, {
-                error: 'Oops! Something went wrong!'
-            });
+            render(404, '404', req, res);
         });
-    });
 }
 
 module.exports = {
-    getFile,
-    readAndSaveFile
+    file_upload_get,
+    file_upload_post,
+    file_download_get,
+    file_download
 };

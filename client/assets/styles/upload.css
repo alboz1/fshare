@@ -81,11 +81,17 @@ h5.small {
 }
 
 .share-section {
+    flex: 1;
     display: flex;
     align-items: center;
     flex-direction: column;
     text-align: center;
     color: var(--primary-color);
+    width: 100%;
+}
+
+.share-section .url {
+    width: 100%;
 }
 
 .share-section .share-url-wrapper {
@@ -95,6 +101,10 @@ h5.small {
     border-radius: 8px;
     display: flex;
     align-items: center;
+}
+
+.share-url-wrapper #share-url {
+    flex: 1;
 }
 
 .share-url-wrapper .copy-btn {

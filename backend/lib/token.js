@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { encrypt, decrypt } = require('../lib/crypto');
+const { encrypt, decrypt } = require('./crypto');
 
 function getToken() {
     const token = crypto.randomBytes(32).toString('hex');

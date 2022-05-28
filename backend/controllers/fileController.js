@@ -1,5 +1,6 @@
 const File = require('../models/fileSchema');
-const { checkToken } = require('../controllers/tokenController');
+const ShortUrl = require('../models/shortUrlSchema');
+const { checkToken } = require('../lib/token');
 const { decrypt } = require('../lib/crypto');
 const render = require('../lib/render');
 const parseForm = require('../lib/parseForm');
@@ -12,14 +13,20 @@ function file_upload_get(req, res, id) {
                 throw new Error('Not found!');
             }
 
-            render(200, 'upload', req, res, {
-                file: {
-                    isImage: result.file.contentType.includes('image'),
-                    name: result.name,
-                    downloadURL: `http://${req.headers.host}/download/?id=${result._id}`,
-                    shareURL: `http://${req.headers.host}/file/?id=${result._id}`
-                }
-            });
+            ShortUrl.findOne({ fileId: result._id })
+                .then(url => {
+                    render(200, 'upload', req, res, {
+                        file: {
+                            isImage: result.file.contentType.includes('image'),
+                            name: result.name,
+                            downloadURL: `http://${req.headers.host}/download/?id=${result._id}`,
+                            shareURL: `http://${req.headers.host}/${url.shortUrl}`
+                        }
+                    });
+                })
+                .catch(error => {
+                    render(404, '404', req, res);
+                });
         })
         .catch(error => {
             render(404, '404', req, res);

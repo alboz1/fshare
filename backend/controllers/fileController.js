@@ -7,30 +7,29 @@ const parseForm = require('../lib/parseForm');
 const readAndSaveFile = require('../lib/readAndSaveFile');
 
 function file_upload_get(req, res, id) {
-    File.findOne({ _id: id })
-        .then(result => {
-            if (!result) {
-                throw new Error('Not found!');
-            }
+    const file = File.findOne({ _id: id });
+    const shareURL = ShortUrl.findOne({ fileId: id });
+    const result = Promise.all([file, shareURL]);
 
-            ShortUrl.findOne({ fileId: result._id })
-                .then(url => {
-                    render(200, 'upload', req, res, {
-                        file: {
-                            isImage: result.file.contentType.includes('image'),
-                            name: result.name,
-                            downloadURL: `http://${req.headers.host}/download/?id=${result._id}`,
-                            shareURL: `http://${req.headers.host}/${url.shortUrl}`
-                        }
-                    });
-                })
-                .catch(error => {
-                    render(404, '404', req, res);
-                });
-        })
-        .catch(error => {
-            render(404, '404', req, res);
+    result.then(data => {
+        const [file, shareURL] = data;
+
+        if (!file || !shareURL) {
+            throw new Error('Not found!');
+        }
+
+        render(200, 'upload', req, res, {
+            file: {
+                isImage: file.file.contentType.includes('image'),
+                name: file.name,
+                downloadURL: `http://${req.headers.host}/download/?id=${file._id}`,
+                shareURL: `http://${req.headers.host}/${shareURL.shortUrl}`
+            }
         });
+    })
+    .catch(error => {
+        render(404, '404', req, res);
+    });
 }
 
 function file_upload_post(req, res) {

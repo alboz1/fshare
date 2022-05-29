@@ -1,7 +1,6 @@
 const fs = require('fs');
 const render = require('./render');
 const saveFile = require('./saveFile');
-const crypto = require('crypto');
 const ShortUrl = require('../models/shortUrlSchema');
 
 function readAndSaveFile(file, token, req, res) {
@@ -47,7 +46,6 @@ function readAndSaveFile(file, token, req, res) {
             res.end();
         })
         .catch(error => {
-            console.log(error);
             render(500, 'upload', req, res, {
                 error: 'Oops! Something went wrong!'
             });

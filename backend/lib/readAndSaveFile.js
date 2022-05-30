@@ -1,7 +1,8 @@
 const fs = require('fs');
+const crypto = require('crypto');
+const ShortUrl = require('../models/shortUrlSchema');
 const render = require('./render');
 const saveFile = require('./saveFile');
-const ShortUrl = require('../models/shortUrlSchema');
 
 function readAndSaveFile(file, token, req, res) {
     let fileBuffer = [];
@@ -32,10 +33,13 @@ function readAndSaveFile(file, token, req, res) {
         const data = saveFile(file, fileBuffer, token);
         data.then(result => {
             //save short url to database
+            const shortUrl = crypto.randomBytes(8).toString('hex').slice(9);
             const url = new ShortUrl({
                 fullUrl: `/file/?id=${result._id}`,
-                fileId: result._id
+                shortUrl: shortUrl,
+                fileId: result._id,
             });
+
             return url.save();
         })
         .then(result => {

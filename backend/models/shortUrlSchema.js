@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const crypto = require('crypto');
 
 const shortUrlSchema = new mongoose.Schema({
     fullUrl: {
@@ -10,8 +9,7 @@ const shortUrlSchema = new mongoose.Schema({
     shortUrl: {
         type: String,
         unique: true,
-        required: true,
-        default: crypto.randomBytes(8).toString('hex').slice(9)
+        required: true
     },
     fileId: {
         type: String,

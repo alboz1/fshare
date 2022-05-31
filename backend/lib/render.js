@@ -15,7 +15,8 @@ function render(status, route, req, res, data={}) {
         }
 
         res.writeHead(status, {
-            'Content-Type': 'text/html'
+            'Content-Type': 'text/html',
+            'Cache-Control': 'no-store'
         });
         res.write(str);
         res.end();

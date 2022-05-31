@@ -2,12 +2,15 @@ const app = {
     init() {
         controllers.selectFile();
         controllers.submitForm();
-
+        
         window.addEventListener("pageshow", e => {
+            const fileUpload = document.querySelector('input[type="file"]');
+            fileUpload.value = null;
+            
             if (e.persisted) {
                 window.location.reload();
             }
-        }, false);
+        });
     }
 };
 

@@ -8,7 +8,8 @@ function static(req, res) {
     const mimeTypes = {
         '.js': 'text/javascript',
         '.css': 'text/css',
-        '.svg': 'image/svg+xml'
+        '.svg': 'image/svg+xml',
+        '.ico': 'image/x-icon'
     };
     const contentType = mimeTypes[extName];
 
@@ -18,9 +19,9 @@ function static(req, res) {
                 render(404, '404', req, res);
             } else {
                 res.writeHead(500, {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'text/html'
                 });
-                res.end(JSON.stringify(err.code));
+                res.end(err.code);
             }
             return;
         }

@@ -11,7 +11,13 @@ function render(status, route, req, res, data={}) {
     
     ejs.renderFile(`${__dirname}/../../client/views/${route}.ejs`, data, (err, str) => {
         if (err) {
-            throw err;
+            res.writeHead(404, {
+                'Content-Type': 'text/html',
+                'Cache-Control': 'no-store'
+            });
+            res.write(err.message);
+            res.end();
+            return;
         }
 
         res.writeHead(status, {

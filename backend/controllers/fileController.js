@@ -38,8 +38,8 @@ function file_upload_post(req, res) {
             const token = checkToken(body.token);
 
             if (!token) {
-                render(400, 'upload', req, res, {
-                    error: 'Something went wrong!'
+                render(401, 'upload', req, res, {
+                    error: 'Unauthorized'
                 });
                 return;
             }

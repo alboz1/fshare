@@ -138,6 +138,7 @@ form .file-info #file-info-picture {
 form .file-info .figure-caption {
     color: var(--primary-color);
     margin: 0 0 0 1em;
+    word-break: break-all;
 }
 
 .show {

@@ -32,6 +32,7 @@
 
 .download-header .file-name {
     color: var(--primary-color);
+    word-break: break-all;
 }
 
 .download-header .download-btn {

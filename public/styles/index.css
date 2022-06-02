@@ -114,6 +114,12 @@ form .wrapper .file-info-wrapper {
     align-items: center;
     flex-direction: column;
     transform: translateY(-100%);
+    color: var(--primary-color);
+}
+
+.file-info-wrapper .file-size-warning {
+    color: #f64242;
+    display: none;
 }
 
 .file-info-wrapper button[type="submit"]:disabled {
@@ -136,7 +142,6 @@ form .file-info #file-info-picture {
 }
 
 form .file-info .figure-caption {
-    color: var(--primary-color);
     margin: 0 0 0 1em;
     word-break: break-all;
 }

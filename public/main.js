@@ -17,7 +17,7 @@ const app = {
 const controllers = {
     submitForm() {
         const form = document.querySelector('#upload-form');
-        form.addEventListener('submit', view.showUploadingAnimation);
+        form.addEventListener('submit', () => view.showUploadingAnimation());
     },
 
     selectFile() {
@@ -30,6 +30,8 @@ const controllers = {
 };
 
 const view = {
+    submitBtn: document.querySelector('button[type="submit"]'),
+
     showSelectedFile(file) {
         const wrapper = document.querySelector('.wrapper');
         const loader = wrapper.querySelector('.loading-file');
@@ -37,7 +39,7 @@ const view = {
         const img = fileInfo.querySelector('#file-info-picture');
         const svg = fileInfo.querySelector('#file-icon');
         const figureCaption = fileInfo.querySelector('.figure-caption');
-
+        const paragraph = fileInfo.querySelector('.file-size-warning');
         const reader = new FileReader();
 
         //reset
@@ -45,6 +47,8 @@ const view = {
         img.style.display = 'none';
         svg.style.display = 'none';
         wrapper.style.maxHeight = '0';
+        paragraph.style.display = 'none';
+        this.submitBtn.style.display = 'inline-block';
 
         if (file) {
             reader.readAsDataURL(file);
@@ -66,18 +70,22 @@ const view = {
     
                 figureCaption.textContent = file.name;
                 fileInfo.classList.add('show');
+
+                if (file.size >= 16777216) {
+                    this.submitBtn.style.display = 'none';
+                    paragraph.style.display = 'block';
+                }
             }
         }
     },
 
     showUploadingAnimation() {
-        const submitBtn = document.querySelector('button[type="submit"]');
-        const submitBtnText = submitBtn.querySelector('.text');
-        const btnLoader = submitBtn.querySelector('.loader');
+        const submitBtnText = this.submitBtn.querySelector('.text');
+        const btnLoader = this.submitBtn.querySelector('.loader');
 
+        this.submitBtn.setAttribute('disabled', 'true');
         btnLoader.style.display = 'inline-block';
         submitBtnText.textContent = 'Uploading...';
-        submitBtn.setAttribute('disabled', 'true');
     }
 };
 

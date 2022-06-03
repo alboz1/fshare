@@ -10,7 +10,7 @@
     --blue: #4253F6;
     --btn-hover: #303db3;
     --btn-text: #FFFEFF;
-    --border-hover: rgba(0, 0, 0, 0.3);
+    --border-hover: rgba(0, 0, 0, 0.4);
 }
 
 .dark-mode {
@@ -20,7 +20,7 @@
     --primary-color: #f1f0f2;
     --secondary-color: #4a4d4d;
     --text: #f9f7fa;
-    --border-hover: #626666;
+    --border-hover: #798080;
 }
 
 body {

@@ -30,7 +30,6 @@ form .input-container {
     background: var(--form-background-color);
     border-radius: 8px;
     box-sizing: border-box;
-    border: 2px dashed var(--secondary-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,11 +38,11 @@ form .input-container {
     position: relative;
     width: 100%;
     height: 210px;
-    transition: border-color 0.2s ease-in-out;
 }
 
-.input-container:hover {
+.input-container:hover > label {
     border-color: var(--border-hover);
+    transition: border-color 0.2s ease-in-out;
 }
 
 .input-container:hover .folder-icon {
@@ -56,8 +55,17 @@ form .input-container {
 }
 
 .input-container #file-upload {
-    display: none;
+    opacity: 0;
     width: 100%;
+}
+
+.input-container #file-upload:focus + label > .folder-icon {
+    transform: scale(1.2);
+}
+
+.input-container #file-upload:focus + label {
+    border-color: var(--border-hover);
+    transition: border-color 0.2s ease-in-out;
 }
 
 .input-container label {
@@ -65,6 +73,9 @@ form .input-container {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    border: 2px dashed var(--secondary-color);
+    border-radius: 8px;
+    box-sizing: border-box;
     color: var(--primary-color);
     cursor: pointer;
     font-weight: 400;

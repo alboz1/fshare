@@ -17,7 +17,11 @@ const app = {
 const controllers = {
     submitForm() {
         const form = document.querySelector('#upload-form');
-        form.addEventListener('submit', () => view.showUploadingAnimation());
+        const label = document.querySelector('.input-container > label');
+        form.addEventListener('submit', () => {
+            label.removeAttribute('for');
+            view.showUploadingAnimation();
+        });
     },
 
     selectFile() {

@@ -5,6 +5,7 @@ const { decrypt } = require('../lib/crypto');
 const render = require('../lib/render');
 const parseForm = require('../lib/parseForm');
 const readAndSaveFile = require('../lib/readAndSaveFile');
+const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 
 function file_upload_get(req, res, id) {
     const file = File.findOne({ _id: id });
@@ -22,8 +23,8 @@ function file_upload_get(req, res, id) {
             file: {
                 isImage: file.file.contentType.includes('image'),
                 name: file.name,
-                downloadURL: `http://${req.headers.host}/download/?id=${file._id}`,
-                shareURL: `http://${req.headers.host}/${shareURL.shortUrl}`
+                downloadURL: `${protocol}://${req.headers.host}/download/?id=${file._id}`,
+                shareURL: `${protocol}://${req.headers.host}/${shareURL.shortUrl}`
             }
         });
     })
@@ -75,7 +76,7 @@ function file_download_get(req, res, id) {
                 file: {
                     isImage: result.file.contentType.includes('image'),
                     name: result.name,
-                    url: `http://${req.headers.host}/download/?id=${result._id}`
+                    url: `${protocol}://${req.headers.host}/download/?id=${result._id}`
                 }
             });
         })
